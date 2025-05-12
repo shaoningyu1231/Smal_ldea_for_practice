@@ -64,6 +64,11 @@ struct Manager {
 typedef struct Manager manager_t;
 static void* thread_callback(void* arg);
 
+manager_t* ThreadPool_create(int num_threads);
+int ThreadPool_add_task(manager_t* pool, void (*task_func)(void* arg), void* user_data);
+int ThreadPool_destroy(manager_t* pool);
+static void* thread_callback(void* arg);
+
 // Function to create a new thread pool
 manager_t* ThreadPool_create(int num_threads) {
 	// Check the allocation
