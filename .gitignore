@@ -1,0 +1,5 @@
+# Ignore all execution files
+threadpool_test
+
+*.o
+*.exe
