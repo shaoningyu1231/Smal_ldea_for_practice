@@ -27,6 +27,9 @@ void handleReadEvent(int sockfd) {
             write(sockfd, buf, bytes_read); // Echo back to client
         } else if (bytes_read == -1 && errno == EINTR) { // Interrupted system call
             continue;
+        } else if (bytes_read == -1 && ((errno == EAGAIN) || (errno == EWOULDBLOCK))) { // No more data
+            printf("No more data to read from client fd %d\n", sockfd);
+            break; // Exit the loop to avoid busy waiting
         } else if (bytes_read == 0) { // Client disconnected
             printf("client fd %d disconnected!\n", sockfd);
             close(sockfd);

@@ -13,4 +13,4 @@ public:
 
     void addFd(int fd, uint32_t op);
     std::vector<epoll_event> poll(int timeout = -1);
-}
+};

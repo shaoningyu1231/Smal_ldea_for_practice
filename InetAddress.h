@@ -10,4 +10,4 @@ class InetAddress
         InetAddress();
         InetAddress(const char* ip, uint16_t port);
         ~InetAddress();
-}
+};
