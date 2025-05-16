@@ -5,6 +5,10 @@
 #include <functional>
 #include <string.h>
 #include <unistd.h>
+#include <cstdio>
+#include <cerrno>
+#include <sys/socket.h>
+#include <cstring>
 
 #define READ_BUFFER 1024
 

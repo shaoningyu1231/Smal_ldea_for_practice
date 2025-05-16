@@ -2,7 +2,7 @@
 #include "util.h"
 #include <unistd.h>
 #include <string.h>
-#include <Channel.h>
+#include "Channel.h"
 
 #define MAX_EVENTS 1000
 
