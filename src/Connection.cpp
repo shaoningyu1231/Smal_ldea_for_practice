@@ -3,6 +3,8 @@
 #include "Channel.h"
 #include <unistd.h>
 #include <string.h>
+#include <cstdio>
+#include <errno.h>
 
 #define READ_BUFFER 1024
 
