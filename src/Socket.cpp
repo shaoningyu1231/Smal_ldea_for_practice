@@ -25,7 +25,7 @@ Socket::~Socket() {
 void Socket::bind(InetAddress *addr) {
     struct sockaddr_in addr_struct = addr->getAddr();
     socklen_t addr_len = addr->getAddr_len();
-    errif(::bind(fd, (sockaddr*)&addr->addr, addr->addr_len) == -1, "socket bind error");
+    errif(::bind(fd, (sockaddr*)&addr_struct, addr_len) == -1, "socket bind error");
     addr->setInetAddr(addr_struct, addr_len);
 }
 
@@ -41,7 +41,7 @@ int Socket::accept(InetAddress *addr) {
     struct sockaddr_in addr_struct;
     socklen_t addr_len = sizeof(addr_struct);
     bzero(&addr_struct, sizeof(addr_struct));
-    int clnt_sockfd = ::accept(fd, (sockaddr*)&addr->addr, &addr->addr_len);
+    int clnt_sockfd = ::accept(fd, (sockaddr*)&addr_struct, &addr_len);
     errif(clnt_sockfd == -1, "socket accept error");
     addr->setInetAddr(addr_struct, addr_len);
     return clnt_sockfd;

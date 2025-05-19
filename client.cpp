@@ -22,7 +22,7 @@ int main() {
     
     // Set the server address to localhost (for testing purposes)
     serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    serv_addr.sin_port = htons(8888);
+    serv_addr.sin_port = htons(1234);
     
     // Connect to the server
     if (connect(sockfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
