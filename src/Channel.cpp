@@ -7,12 +7,14 @@ Channel::Channel(EventLoop *_loop, int _fd) : loop(_loop), fd(_fd), events(0), r
 
 Channel::~Channel() {
     // Destructor implementation
+    if (fd != -1) {
+        close(fd);
+        fd = -1;
+    }
 }
 
 void Channel::handleEvent() {
-    if (callback) {
-        callback();
-    }
+    loop->addThread(callback);
 }
 
 void Channel::enableReading() {

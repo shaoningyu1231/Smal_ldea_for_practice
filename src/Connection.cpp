@@ -8,11 +8,12 @@
 
 #define READ_BUFFER 1024
 
-Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_sock), channel(nullptr) {
+Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_sock), channel(nullptr), inBuffer(new std::string()), readBuffer(nullptr) {
     channel = new Channel(loop, sock->getFd());
     std::function<void()> cb = std::bind(&Connection::echo, this, sock->getFd());
     channel->setCallback(cb);
     channel->enableReading();
+    readBuffer = new Buffer();
 }
 
 Connection::~Connection() {
@@ -28,8 +29,7 @@ void Connection::echo(int sockfd) {
         // Read data from the socket
         ssize_t bytes_read = read(sockfd, buf, sizeof(buf));
         if (bytes_read > 0) {
-            printf("message from client fd %d: %s\n", sockfd, buf);
-            write(sockfd, buf, sizeof(buf));
+            readBuffer->append(buf, bytes_read); 
         } else if (bytes_read == -1 && errno == EINTR) {  
             // Interrupted system call, continue reading
             printf("continue reading");
@@ -37,6 +37,9 @@ void Connection::echo(int sockfd) {
         } else if (bytes_read == -1 && ((errno == EAGAIN) || (errno == EWOULDBLOCK))) { 
             // Non-blocking IO, this condition indicates that all data has been read
             printf("finish reading once, errno: %d\n", errno);
+            printf("message from client fd %d: %s\n", sockfd, readBuffer->c_str());
+            errif(write(sockfd, readBuffer->c_str(), readBuffer->size()) == -1, "socket write error");
+            readBuffer->clear();
             break;
         } else if (bytes_read == 0) { 
             printf("EOF, client fd %d disconnected\n", sockfd);
