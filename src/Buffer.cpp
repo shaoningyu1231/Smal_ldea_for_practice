@@ -17,11 +17,11 @@ void Buffer::append(const char* _str, int _size){
     }
 }
 
-size_t Buffer::size(){
+size_t Buffer::size() const{
     return buf.size();
 }
 
-const char* Buffer::c_str(){
+const char* Buffer::c_str() const{
     return buf.c_str();
 }
 

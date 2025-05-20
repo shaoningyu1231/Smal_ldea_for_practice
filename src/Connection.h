@@ -1,5 +1,7 @@
 #pragma once
 #include <functional>
+#include <string>
+#include "Buffer.h"
 
 class EventLoop;
 class Socket;

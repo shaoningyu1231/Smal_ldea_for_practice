@@ -1,6 +1,8 @@
+#include <functional>
 #pragma once
 class Epoll;
 class Channel;
+class ThreadPool;
 class EventLoop
 {
 private:

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <cstdio>
 #include <errno.h>
+#include "util.h"
 
 #define READ_BUFFER 1024
 
