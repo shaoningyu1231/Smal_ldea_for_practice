@@ -56,7 +56,7 @@ void Connection::setDeleteConnectionCallback(std::function<void(Socket*)> _cb) {
 }
 
 void Connection::send(int sockfd){
-    chat buf[readBuffer->size()];
+    char buf[readBuffer->size()];
     strcpy(buf, readBuffer->c_str());
     int data_size = readBuffer->size();
     int already_send = 0;
