@@ -10,6 +10,7 @@ private:
     uint32_t events;
     uint32_t revents;
     bool inEpoll; // whether the channel is in epoll
+    bool useThreadPool; // whether to use thread pool for callback
     std::function<void()> callback; // callback function to be called when the event occurs
 public:
     Channel(EventLoop *_loop, int _fd);
@@ -27,4 +28,6 @@ public:
     // void setEvents(uint32_t);
     void setRevents(uint32_t);
     void setCallback(std::function<void()>);
+    void setUseThreadPool(bool use = true); 
+    void useET();
 };

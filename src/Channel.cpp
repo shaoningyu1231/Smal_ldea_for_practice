@@ -2,7 +2,7 @@
 #include "EventLoop.h"
 #include <unistd.h>
 
-Channel::Channel(EventLoop *_loop, int _fd) : loop(_loop), fd(_fd), events(0), revents(0), inEpoll(false) {
+Channel::Channel(EventLoop *_loop, int _fd) : loop(_loop), fd(_fd), events(0), revents(0), inEpoll(false), useThreadPool(true) {
     // Constructor implementation
 }
 
@@ -49,4 +49,13 @@ void Channel::setRevents(uint32_t _ev) {
 
 void Channel::setCallback(std::function<void()> _cb) {
     callback = _cb;
+}
+
+void Channel::setUseThreadPool(bool _useThreadPool) {
+    useThreadPool = _useThreadPool;
+}
+
+void Channel::useET() {
+    events |= EPOLLET;
+    loop->updateChannel(this);
 }

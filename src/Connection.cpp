@@ -14,6 +14,7 @@ Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_soc
     std::function<void()> cb = std::bind(&Connection::echo, this, sock->getFd());
     channel->setCallback(cb);
     channel->enableReading();
+    channel->useET();
     readBuffer = new Buffer();
 }
 
@@ -52,4 +53,24 @@ void Connection::echo(int sockfd) {
 
 void Connection::setDeleteConnectionCallback(std::function<void(Socket*)> _cb) {
     deleteConnectionCallback = _cb;
+}
+
+void Connection::send(int sockfd){
+    chat buf[readBuffer->size()];
+    strcpy(buf, readBuffer->c_str());
+    int data_size = readBuffer->size();
+    int already_send = 0;
+    while (already_send < data_size) {
+        ssize_t bytes_send = write(sockfd, buf + already_send, data_size - already_send);
+        if (bytes_send > 0) {
+            already_send += bytes_send;
+        } else if (bytes_send == -1 && errno == EINTR) {
+            continue; // Interrupted system call, continue sending
+        } else if (bytes_send == -1 && ((errno == EAGAIN) || (errno == EWOULDBLOCK))) {
+            break; // Non-blocking IO, break the loop
+        } else {
+            printf("send error\n");
+            break;
+        }
+    }
 }

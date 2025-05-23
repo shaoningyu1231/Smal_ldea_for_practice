@@ -15,6 +15,7 @@ Acceptor::Acceptor(EventLoop *_loop) : loop(_loop), sock(nullptr), acceptChannel
     std::function<void()> cb = std::bind(&Acceptor::acceptConnection, this);
     acceptChannel->setCallback(cb);
     acceptChannel->enableReading();
+    acceptChannel->setUseThreadPool(false);
     delete addr;
 }
 
