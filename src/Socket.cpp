@@ -1,10 +1,10 @@
 #include "Socket.h"
-#include "InetAddress.h"
 #include "util.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <cerrno>
 
 Socket::Socket() : fd(-1) {
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,13 +59,13 @@ int Socket::accept(InetAddress *addr) {
         sockfd = ::accept(fd, (sockaddr*)&addr_struct, &addr_len);
         errif(sockfd == -1, "socket accept error");
     }
-    addr->setInetAddr(addr_struct, addr_len);
+    addr->setInetAddr(addr_struct);
     return sockfd;
 }
 
 void Socket::connect(InetAddress *addr) {
     struct sockaddr_in addr_struct = addr->getAddr();
-    socklen_t addr_len = addr->getAddr_len();
+    socklen_t addr_len = sizeof(addr_struct);
 
     // For non-blocking sockets, we need to handle the connection attempt
     if (fcntl(fd, F_GETFL) & O_NONBLOCK) {

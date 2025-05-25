@@ -6,7 +6,6 @@
 # include "src/util.h"
 # include "src/Buffer.h"
 # include "src/Socket.h"
-# include "src/InetAddress.h"
 
 #define BUFFER_SIZE 1024
 

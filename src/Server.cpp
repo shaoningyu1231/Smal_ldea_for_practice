@@ -38,7 +38,7 @@ void Server::newConnection(Socket *serv_sock){
     }
     int random = serv_sock->getFd() % subReactors.size(); // Randomly select a sub-reactor
     Connection *conn = new Connection(subReactors[random], serv_sock);
-    std::function<void(Socket*)> cb = std::bind(&Server::deleteConnection, this, std::placeholders::_1);
+    std::function<void(int)> cb = std::bind(&Server::deleteConnection, this, std::placeholders::_1);
     conn->setDeleteConnectionCallback(cb);
     connections[serv_sock->getFd()] = conn;
 }

@@ -6,6 +6,7 @@ class Acceptor;
 class Connection;
 class ThreadPool;
 #include <map>
+#include <vector>
 class Server
 {
 private:
