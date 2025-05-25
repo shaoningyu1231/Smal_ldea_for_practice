@@ -9,7 +9,7 @@
 
 #define READ_BUFFER 1024
 
-Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_sock), channel(nullptr), inBuffer(new std::string()), readBuffer(nullptr) {
+Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_sock), channel(nullptr), readBuffer(nullptr) {
     channel = new Channel(loop, sock->getFd());
     std::function<void()> cb = std::bind(&Connection::echo, this, sock->getFd());
     channel->setCallback(cb);
@@ -21,6 +21,7 @@ Connection::Connection(EventLoop *_loop, Socket *_sock) : loop(_loop), sock(_soc
 Connection::~Connection() {
     delete channel;
     delete sock;
+    delete readBuffer;
 }
 
 void Connection::echo(int sockfd) {

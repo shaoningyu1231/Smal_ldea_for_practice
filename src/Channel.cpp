@@ -2,7 +2,7 @@
 #include "EventLoop.h"
 #include <unistd.h>
 
-Channel::Channel(EventLoop *_loop, int _fd) : loop(_loop), fd(_fd), events(0), revents(0), inEpoll(false), useThreadPool(true) {
+Channel::Channel(EventLoop *_loop, int _fd) : loop(_loop), fd(_fd), events(0), ready(0), inEpoll(false){
     // Constructor implementation
 }
 
@@ -15,12 +15,25 @@ Channel::~Channel() {
 }
 
 void Channel::handleEvent() {
-    loop->addThread(callback);
+    if (ready & (EPOLLIN | EPOLLPRI)) {
+        readCallback();
+    }
+    if (ready & EPOLLOUT) {
+        writeCallback();
+    }
 }
 
 void Channel::enableReading() {
-    events = EPOLLIN | EPOLLET;
+    events |= EPOLLIN | EPOLLPRI;
     loop->updateChannel(this);
+}
+
+void Channel::setReady(uint32_t _ev) {
+    ready = _ev;
+}
+
+uint32_t Channel::getReady() {
+    return ready;
 }
 
 int Channel::getFd() {
@@ -31,28 +44,16 @@ uint32_t Channel::getEvents() {
     return events;
 }
 
-uint32_t Channel::getRevents() {
-    return revents;
-}
-
 bool Channel::getInEpoll() {
     return inEpoll;
 }
 
-void Channel::setInEpoll() {
-    inEpoll = true;
+void Channel::setInEpoll(bool _in) {
+    inEpoll = _in;
 }
 
-void Channel::setRevents(uint32_t _ev) {
-    revents = _ev;
-}
-
-void Channel::setCallback(std::function<void()> _cb) {
-    callback = _cb;
-}
-
-void Channel::setUseThreadPool(bool _useThreadPool) {
-    useThreadPool = _useThreadPool;
+void Channel::setReadCallback(std::function<void()> _cb) {
+    readCallback = _cb;
 }
 
 void Channel::useET() {

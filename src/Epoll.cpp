@@ -69,3 +69,10 @@ void Epoll::updateChannel(Channel *channel) {
         errif(epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev) == -1, "epoll modify event error");
     }
 }
+
+// Delete the channel from the epoll instance
+void Epoll::deleteChannel(Channel *channel) {
+    int fd = channel->getFd();
+    errif(epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL) == -1, "epoll delete event error");
+    channel->setInEpoll(false);
+}

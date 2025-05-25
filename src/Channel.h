@@ -8,10 +8,10 @@ private:
     EventLoop *loop;
     int fd;
     uint32_t events;
-    uint32_t revents;
+    uint32_t ready;
     bool inEpoll; // whether the channel is in epoll
-    bool useThreadPool; // whether to use thread pool for callback
-    std::function<void()> callback; // callback function to be called when the event occurs
+    std::function<void()> readCallback; // read callback function to be called when the event occurs
+    std::function<void()> writeCallback; // write callback function to be called when the event occurs
 public:
     Channel(EventLoop *_loop, int _fd);
     ~Channel();
@@ -21,13 +21,11 @@ public:
 
     int getFd();
     uint32_t getEvents();
-    uint32_t getRevents();
+    uint32_t getReady();
     bool getInEpoll();
-    void setInEpoll();
-
+    void setInEpoll(bool _in = true);
+    void useET(); // Use Edge Triggered mode
     // void setEvents(uint32_t);
-    void setRevents(uint32_t);
-    void setCallback(std::function<void()>);
-    void setUseThreadPool(bool use = true); 
-    void useET();
+    void setReady(uint32_t);
+    void setReadCallback(std::function<void()>);
 };

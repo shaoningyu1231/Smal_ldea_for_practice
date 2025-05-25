@@ -4,18 +4,21 @@ class EventLoop;
 class Socket;
 class Acceptor;
 class Connection;
+class ThreadPool;
 #include <map>
 class Server
 {
 private:
-    EventLoop *loop;
+    EventLoop *mainReactor;
     Acceptor *acceptor;
     std::map<int, Connection*> connections;
+    std::vector<EventLoop*> subReactors;
+    ThreadPool *thpool;
 public:
     Server(EventLoop*);
     ~Server();
 
     void handleReadEvent(int);
     void newConnection(Socket *serv_sock);
-    void deleteConnection(Socket *serv_sock);
+    void deleteConnection(int sockfd);
 };
