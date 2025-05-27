@@ -1,5 +1,3 @@
-/client
-/server
-/ThreadPoolTest
-/test
-
+build/
+*__pycache__/
+.vscode/settings.json

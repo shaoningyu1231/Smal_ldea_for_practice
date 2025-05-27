@@ -49,13 +49,15 @@ void oneClient(int msgs, int wait){
     }
     delete addr;
     delete sock;
+    delete readBuffer;
+    delete sendBuffer;
 }
 
 int main(int argc, char *argv[]) {
     int threads = 100;
     int msgs = 100;
     int wait = 0;
-    int o;
+    int o = -1;
     const char *optstring = "t:m:w:";
 
     while((o = getopt(argc, argv, optstring)) != -1){
